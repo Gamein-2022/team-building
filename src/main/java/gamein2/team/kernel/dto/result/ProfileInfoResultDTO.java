@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ErrorResultDTO extends BaseResult {
-    private String message;
+public class ProfileInfoResultDTO {
+    private String englishName;
+    private String persianName;
 }

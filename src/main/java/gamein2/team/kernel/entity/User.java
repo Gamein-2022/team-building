@@ -52,6 +52,8 @@ public class User {
     @Column(name = "password_code", unique = true)
     private String passwordCode;
 
+
+
     public UserDTO toDTO() {
         return new UserDTO(id, name);
     }

@@ -7,6 +7,7 @@ import gamein2.team.kernel.exceptions.BadRequestException;
 import gamein2.team.kernel.exceptions.InvalidTokenException;
 import gamein2.team.kernel.exceptions.UserAlreadyExist;
 import gamein2.team.kernel.exceptions.UserNotFoundException;
+import gamein2.team.kernel.iao.AuthInfo;
 import gamein2.team.kernel.repos.UserRepository;
 import gamein2.team.kernel.util.JwtUtils;
 import it.ozimov.springboot.mail.model.Email;
@@ -178,5 +179,23 @@ public class AuthServiceHandler implements AuthService {
                     .charAt(index));
         }
         return sb.toString();
+    }
+
+    @Override
+    public AuthInfo extractAuthInfoFromToken(String token) throws InvalidTokenException {
+        if (JwtUtils.isTokenExpired(token)) {
+            throw new InvalidTokenException("توکن ارسالی معتبر نمی‌باشد");
+        }
+        Long id = Long.parseLong(JwtUtils.getIdFromToken(token));
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new InvalidTokenException("توکن ارسالی معتبر نمی‌باشد");
+        }
+
+
+        User user = userOptional.get();
+        return new AuthInfo(
+                user, user.getTeam()
+        );
     }
 }

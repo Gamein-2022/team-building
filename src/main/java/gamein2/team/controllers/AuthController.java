@@ -11,7 +11,6 @@ import gamein2.team.kernel.dto.result.ServiceResult;
 import gamein2.team.kernel.exceptions.BadRequestException;
 import gamein2.team.kernel.exceptions.UserAlreadyExist;
 import gamein2.team.kernel.exceptions.UserNotFoundException;
-import gamein2.team.kernel.repos.UserRepository;
 import gamein2.team.services.auth.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,12 +42,12 @@ public class AuthController {
             return new ResponseEntity<>(ServiceResult.createResult(result), HttpStatus.OK);
         } catch (UserNotFoundException e) {
             logger.error(e.toString());
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.NOT_FOUND);
-            return new ResponseEntity<>(error, error.getStatus());
+            ErrorResultDTO error = new ErrorResultDTO(e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         } catch (BadRequestException e) {
             logger.error(e.toString());
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(error, error.getStatus());
+            ErrorResultDTO error = new ErrorResultDTO(e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -61,8 +60,8 @@ public class AuthController {
             return new ResponseEntity<>(ServiceResult.createResult(result), HttpStatus.OK);
         } catch (BadRequestException | UserAlreadyExist e) {
             logger.error(e.toString());
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(error, error.getStatus());
+            ErrorResultDTO error = new ErrorResultDTO(e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -93,8 +92,8 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BadRequestException e) {
             logger.error(e.getMessage(), e);
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(error, error.getStatus());
+            ErrorResultDTO error = new ErrorResultDTO(e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     }
 }
