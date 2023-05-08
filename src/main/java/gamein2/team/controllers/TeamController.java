@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("team")
@@ -27,9 +26,25 @@ public class TeamController {
         this.serviceHandler = serviceHandler;
     }
 
+
+
+    @GetMapping(value = "profile", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BaseResult> getProfile(@ModelAttribute AuthInfo authInfo) {
+        return new ResponseEntity<>(ServiceResult.createResult(serviceHandler.getProfile(authInfo.getUser())),
+                HttpStatus.OK);
+    }
+
+    @PutMapping(value = "profile", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BaseResult> updateProfile(@ModelAttribute AuthInfo authInfo,
+                                                    @RequestBody ProfileInfoDTO profile) {
+        return new ResponseEntity<>(ServiceResult.createResult(serviceHandler.updateProfile(authInfo.getUser(), profile)),
+                HttpStatus.OK);
+    }
+
     @GetMapping(value = "users", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDTO>> getUsers(@ModelAttribute AuthInfo authInfo) {
-        return new ResponseEntity<>(serviceHandler.getUsers(authInfo.getUser()), HttpStatus.OK);
+    public ResponseEntity<BaseResult> getUsers(@ModelAttribute AuthInfo authInfo) {
+        return new ResponseEntity<>(ServiceResult.createResult(serviceHandler.getUsers(authInfo.getUser())),
+                HttpStatus.OK);
     }
 
     @PostMapping(value = "team-offer", consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -50,14 +65,17 @@ public class TeamController {
     }
 
     @GetMapping(value = "offers", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<TeamOfferDTO>> getMyOffers(@ModelAttribute AuthInfo authInfo) {
-        return new ResponseEntity<>(serviceHandler.getMyOffers(authInfo.getUser()), HttpStatus.OK);
+    public ResponseEntity<BaseResult> getMyOffers(@ModelAttribute AuthInfo authInfo) {
+        return new ResponseEntity<>(ServiceResult.createResult(serviceHandler.getMyOffers(authInfo.getUser())),
+                HttpStatus.OK);
     }
 
     @GetMapping(value = "sent-offers", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getTeamOffers(@ModelAttribute AuthInfo authInfo) {
+    public ResponseEntity<BaseResult> getTeamOffers(@ModelAttribute AuthInfo authInfo) {
         try {
-            return new ResponseEntity<>(serviceHandler.getTeamOffers(authInfo.getTeam(), authInfo.getUser()), HttpStatus.OK);
+            return new ResponseEntity<>(ServiceResult.createResult(serviceHandler.getTeamOffers(authInfo.getTeam(),
+                    authInfo.getUser())),
+                    HttpStatus.OK);
         } catch (BadRequestException e) {
             logger.error(e.getMessage(), e);
             return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.BAD_REQUEST);

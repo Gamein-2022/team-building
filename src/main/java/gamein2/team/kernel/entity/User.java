@@ -1,12 +1,17 @@
 package gamein2.team.kernel.entity;
 
+import gamein2.team.kernel.dto.result.ProfileInfoDTO;
 import gamein2.team.kernel.dto.result.UserDTO;
+import gamein2.team.kernel.enums.Education;
+import gamein2.team.kernel.enums.Gender;
+import gamein2.team.kernel.enums.IntroductionMethod;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -46,15 +51,53 @@ public class User {
     @Column(name = "persian_name")
     private String persianName;
 
+    @Column(name = "persian_surname")
+    private String persianSurname;
+
     @Column(name = "english_name")
     private String englishName;
+
+    @Column(name = "english_surname")
+    private String englishSurname;
+
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Column(name = "date_of_birth")
+    private LocalDate dob;
+
+    @Column(name = "education")
+    @Enumerated(EnumType.STRING)
+    private Education education;
+
+    @Column(name = "school")
+    private String school;
+
+    @Column(name = "major")
+    private String major;
+
+    @Column(name = "year_of_entrance")
+    private Integer yearOfEntrance;
+
+    @Column(name = "province")
+    private String province;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "introduction_method")
+    private IntroductionMethod introductionMethod;
 
     @Column(name = "password_code", unique = true)
     private String passwordCode;
 
-
-
     public UserDTO toDTO() {
         return new UserDTO(id, name);
+    }
+
+    public ProfileInfoDTO toProfileDTO() {
+        return new ProfileInfoDTO(persianName, persianSurname, englishName, englishSurname, gender, dob, education,
+                school, major, yearOfEntrance, province, city, introductionMethod, team == null ? null : team.getName());
     }
 }

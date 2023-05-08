@@ -2,6 +2,9 @@ package gamein2.team.services.team;
 
 import gamein2.team.kernel.dto.result.*;
 import gamein2.team.kernel.entity.*;
+import gamein2.team.kernel.enums.Education;
+import gamein2.team.kernel.enums.Gender;
+import gamein2.team.kernel.enums.IntroductionMethod;
 import gamein2.team.kernel.exceptions.BadRequestException;
 import gamein2.team.kernel.exceptions.UnauthorizedException;
 import gamein2.team.kernel.repos.TeamOfferRepository;
@@ -9,6 +12,7 @@ import gamein2.team.kernel.repos.TeamRepository;
 import gamein2.team.kernel.repos.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +28,31 @@ public class TeamServiceHandler implements TeamService {
         this.userRepository = userRepository;
         this.teamOfferRepository = teamOfferRepository;
         this.teamRepository = teamRepository;
+    }
+
+
+    @Override
+    public ProfileInfoDTO getProfile(User user) {
+        return user.toProfileDTO();
+    }
+
+    @Override
+    public ProfileInfoDTO updateProfile(User user, ProfileInfoDTO newProfile) {
+        user.setPersianName(newProfile.getPersianName());
+        user.setPersianSurname(newProfile.getPersianSurname());
+        user.setEnglishName(newProfile.getEnglishName());
+        user.setEnglishSurname(newProfile.getEnglishSurname());
+        user.setGender(newProfile.getGender());
+        user.setDob(newProfile.getDob());
+        user.setEducation(newProfile.getEducation());
+        user.setSchool(newProfile.getSchool());
+        user.setMajor(newProfile.getMajor());
+        user.setYearOfEntrance(newProfile.getYearOfEntrance());
+        user.setProvince(newProfile.getProvince());
+        user.setCity(newProfile.getCity());
+        user.setIntroductionMethod(newProfile.getIntroductionMethod());
+
+        return userRepository.save(user).toProfileDTO();
     }
 
     @Override
@@ -94,7 +123,7 @@ public class TeamServiceHandler implements TeamService {
     }
 
     @Override
-    public ProfileInfoResultDTO leaveTeam(User user) throws BadRequestException {
+    public ProfileInfoDTO leaveTeam(User user) throws BadRequestException {
         Team team = user.getTeam();
         if (team == null) {
             throw new BadRequestException("شما تیم ندارید!");
@@ -110,7 +139,7 @@ public class TeamServiceHandler implements TeamService {
             teamRepository.save(team);
             userRepository.save(user);
         }
-        return new ProfileInfoResultDTO(user.getEnglishName(), user.getPersianName());
+        return user.toProfileDTO();
     }
 
     private void validateTeamAccess(Team team, User user) throws BadRequestException, UnauthorizedException {
