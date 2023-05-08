@@ -15,6 +15,10 @@ services:
       - gamein 
     environment:
       - spring.datasource.url=jdbc:postgresql://192.168.0.223:5432/team
+      - spring.datasource.username=gamein
+      - spring.datasource.password=gamein123
+      - auth.url=https://api-gamein.dariahamrah.ir/dashboard/auth/info
+      - live.data.url=http://192.168.0.222:8083/websocket/api/notify
       
   team-bulding-1:
     image: registry.dariasystem.com/gamein/team-bulding:dev
@@ -26,3 +30,7 @@ services:
       - gamein
     environment:
       - spring.datasource.url=jdbc:postgresql://192.168.0.223:5432/team
+      - spring.datasource.username=gamein
+      - spring.datasource.password=gamein123
+      - auth.url=https://api-gamein.dariahamrah.ir/dashboard/auth/info
+      - live.data.url=http://192.168.0.222:8083/websocket/api/notify
