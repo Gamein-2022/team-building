@@ -1,0 +1,46 @@
+name: deploy dashboard
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:        
+
+
+  build-team-bulding:
+    #needs: check-code
+    runs-on: [app]
+    steps:
+      - uses: actions/checkout@master
+      - run: |
+              docker login   -u daria -p 7HlUyiSD  https://registry.dariasystem.com
+              docker build -t registry.dariasystem.com/gamein/team-bulding:dev .
+              docker push registry.dariasystem.com/gamein/team-bulding:dev
+ 
+ 
+  deploy-team-bulding:
+    needs: build-team-bulding
+    runs-on: [app]
+    steps:
+      - uses: actions/checkout@master
+      - run: | 
+              docker login   -u daria -p 7HlUyiSD  https://registry.dariasystem.com
+              docker pull registry.dariasystem.com/gamein/team-bulding:dev
+              docker rm -f team-bulding      
+              docker-compose up  -d team-bulding
+              sleep 10
+              docker compose ps
+              
+              
+  deploy-team-bulding-1:
+    needs: build-team-bulding
+    runs-on: [app-1]
+    steps:
+      - uses: actions/checkout@master
+      - run: | 
+              docker login   -u daria -p 7HlUyiSD  https://registry.dariasystem.com
+              docker pull registry.dariasystem.com/gamein/team-bulding:dev
+              docker rm -f team-bulding-1
+              docker compose up  -d team-bulding-1
+              sleep 10
+              docker compose ps
