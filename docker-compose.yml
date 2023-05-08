@@ -1,0 +1,28 @@
+version: "3.3"
+networks:
+   gamein:
+     external: true
+
+
+services:
+  team-bulding:
+    image: registry.dariasystem.com/gamein/team-bulding:dev
+    container_name: team-bulding
+    restart: always
+    ports:
+      - 8085:8080
+    networks:
+      - gamein 
+    environment:
+      - spring.datasource.url=jdbc:postgresql://192.168.0.223:5432/team
+      
+  team-bulding-1:
+    image: registry.dariasystem.com/gamein/team-bulding:dev
+    container_name: team-bulding-1
+    restart: always
+    ports:
+      - 8085:8080
+    networks:
+      - gamein
+     environment:
+      - spring.datasource.url=jdbc:postgresql://192.168.0.223:5432/team
