@@ -97,7 +97,7 @@ public class User {
     }
 
     public ProfileInfoDTO toProfileDTO() {
-        return new ProfileInfoDTO(persianName, persianSurname, englishName, englishSurname, gender, dob, education,
+        return new ProfileInfoDTO(name, persianName, persianSurname, englishName, englishSurname, gender, dob, education,
                 school, major, yearOfEntrance, province, city, introductionMethod, team == null ? null : team.getName());
     }
 }

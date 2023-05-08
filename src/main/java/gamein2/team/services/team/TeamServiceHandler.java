@@ -2,9 +2,6 @@ package gamein2.team.services.team;
 
 import gamein2.team.kernel.dto.result.*;
 import gamein2.team.kernel.entity.*;
-import gamein2.team.kernel.enums.Education;
-import gamein2.team.kernel.enums.Gender;
-import gamein2.team.kernel.enums.IntroductionMethod;
 import gamein2.team.kernel.exceptions.BadRequestException;
 import gamein2.team.kernel.exceptions.UnauthorizedException;
 import gamein2.team.kernel.repos.TeamOfferRepository;
@@ -12,7 +9,6 @@ import gamein2.team.kernel.repos.TeamRepository;
 import gamein2.team.kernel.repos.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -56,7 +52,8 @@ public class TeamServiceHandler implements TeamService {
     }
 
     @Override
-    public List<UserDTO> getUsers(User user) {
+    public List<UserDTO> getUsers(User user) throws BadRequestException {
+        checkProfileCompletion(user);
         return userRepository.findAllByIdNot(user.getId()).stream().map(User::toDTO).collect(Collectors.toList());
     }
 
@@ -85,7 +82,8 @@ public class TeamServiceHandler implements TeamService {
     }
 
     @Override
-    public List<TeamOfferDTO> getMyOffers(User user) {
+    public List<TeamOfferDTO> getMyOffers(User user) throws BadRequestException {
+        checkProfileCompletion(user);
         return teamOfferRepository.findAllByUser_Id(user.getId()).stream().map(TeamOffer::toDTO).collect(Collectors.toList());
     }
 
@@ -98,6 +96,7 @@ public class TeamServiceHandler implements TeamService {
 
     @Override
     public TeamInfoResultDTO acceptOffer(User user, Long offerId) throws BadRequestException {
+        checkProfileCompletion(user);
         Optional<TeamOffer> teamOfferOptional = teamOfferRepository.findById(offerId);
         if (teamOfferOptional.isEmpty()) {
             throw new BadRequestException("درخواست اضافه شدن به تیم یافت نشد!");
@@ -124,6 +123,7 @@ public class TeamServiceHandler implements TeamService {
 
     @Override
     public ProfileInfoDTO leaveTeam(User user) throws BadRequestException {
+        checkProfileCompletion(user);
         Team team = user.getTeam();
         if (team == null) {
             throw new BadRequestException("شما تیم ندارید!");
@@ -143,11 +143,22 @@ public class TeamServiceHandler implements TeamService {
     }
 
     private void validateTeamAccess(Team team, User user) throws BadRequestException, UnauthorizedException {
+        checkProfileCompletion(user);
         if (team == null) {
             throw new BadRequestException("شما تیمی ندارید!");
         }
         if (!team.getOwner().getId().equals(user.getId())) {
             throw new UnauthorizedException("شما اجازه‌ی این کار را ندارید!");
+        }
+    }
+
+    private void checkProfileCompletion(User user) throws BadRequestException {
+        if (user.getCity() == null || user.getDob() == null || user.getEducation() == null || user.getGender() == null
+                || user.getEnglishName() == null || user.getEnglishSurname() == null || user.getPersianName() == null
+                || user.getPersianSurname() == null || user.getMajor() == null || user.getName() == null
+                || user.getIntroductionMethod() == null || user.getProvince() == null || user.getSchool() == null
+                || user.getYearOfEntrance() == null) {
+            throw new BadRequestException("پروفایل شما کامل نیست!");
         }
     }
 }
