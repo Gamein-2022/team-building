@@ -1,0 +1,32 @@
+package gamein2.team.kernel.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.List;
+
+
+@Entity
+@Table(name = "teams")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class Team {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
+    private Long id;
+
+    @OneToMany
+    private List<User> users;
+
+    @OneToOne(optional = false)
+    private User owner;
+
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
+}

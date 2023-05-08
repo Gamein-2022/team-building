@@ -1,29 +1,48 @@
 plugins {
-	id 'java'
 	id 'org.springframework.boot' version '2.7.8'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+	id 'java'
+	id "org.sonarqube" version "4.0.0.2929"
 }
 
-group = 'gamein.2022'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+group = 'gamein2022.backend'
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
+apply plugin: 'org.springframework.boot'
+
 
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	implementation 'commons-validator:commons-validator:1.7'
+
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.2'
+
+	implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
+
+	implementation group: 'com.google.guava', name: 'guava', version: '30.0-jre'
+	implementation 'com.google.code.gson:gson'
+
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+	implementation 'org.jetbrains:annotations:23.0.0'
+	implementation "it.ozimov:spring-boot-email-core:0.6.3"
+
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+}
+
+jar {
+	enabled = false
 }
 
 tasks.named('test') {
