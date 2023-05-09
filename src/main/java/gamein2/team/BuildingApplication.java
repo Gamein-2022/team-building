@@ -3,9 +3,10 @@ package gamein2.team;
 import it.ozimov.springboot.mail.configuration.EnableEmailTools;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"gamein2.team"}, exclude = { SecurityAutoConfiguration.class })
 @EnableWebMvc
 @EnableEmailTools
 public class BuildingApplication {

@@ -1,5 +1,6 @@
 package gamein2.team.services.team;
 
+import gamein2.team.kernel.dto.request.ProfileInfoRequestDTO;
 import gamein2.team.kernel.dto.result.*;
 import gamein2.team.kernel.entity.*;
 import gamein2.team.kernel.exceptions.BadRequestException;
@@ -9,6 +10,7 @@ import gamein2.team.kernel.repos.TeamRepository;
 import gamein2.team.kernel.repos.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,7 +35,7 @@ public class TeamServiceHandler implements TeamService {
     }
 
     @Override
-    public ProfileInfoDTO updateProfile(User user, ProfileInfoDTO newProfile) {
+    public ProfileInfoDTO updateProfile(User user, ProfileInfoRequestDTO newProfile) {
         user.setPersianName(newProfile.getPersianName());
         user.setPersianSurname(newProfile.getPersianSurname());
         user.setEnglishName(newProfile.getEnglishName());
@@ -140,6 +142,39 @@ public class TeamServiceHandler implements TeamService {
             userRepository.save(user);
         }
         return user.toProfileDTO();
+    }
+
+    @Override
+    public TeamInfoResultDTO getTeamInfo(Team team, User user) throws BadRequestException {
+        checkProfileCompletion(user);
+        return new TeamInfoResultDTO(team == null ? null : team.getName(),
+                team == null ? null : team.getUsers().stream().map(User::toDTO).collect(Collectors.toList()),
+                team == null ? null : user.getId().equals(team.getOwner().getId()));
+    }
+
+    @Override
+    public TeamInfoResultDTO createTeam(User user, String teamName) throws BadRequestException {
+        checkProfileCompletion(user);
+        if (teamName == null || teamName.isEmpty()) {
+            throw new BadRequestException("نام تیم نباید خالی باشد!");
+        }
+
+        Team team = new Team();
+
+        team.setName(teamName);
+        team.setUsers(new ArrayList<>());
+        team.getUsers().add(user);
+        team.setOwner(user);
+
+        teamRepository.save(team);
+
+        user.setTeam(team);
+
+        userRepository.save(user);
+
+        return new TeamInfoResultDTO(team.getName(),
+                team.getUsers().stream().map(User::toDTO).collect(Collectors.toList()),
+                true);
     }
 
     private void validateTeamAccess(Team team, User user) throws BadRequestException, UnauthorizedException {

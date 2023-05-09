@@ -26,5 +26,4 @@ public class ProfileInfoDTO {
     private String province;
     private String city;
     private IntroductionMethod introductionMethod;
-    private String teamName;
 }

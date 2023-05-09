@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("auth")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -31,7 +31,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping(value = "/login",
+    @PostMapping(value = "login",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResult> login(@RequestBody RegisterAndLoginRequestDTO request) {
@@ -65,7 +65,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("forgot-password")
+    @PostMapping("forget-password")
     public ResponseEntity<BaseResult> forgotPassword(@RequestBody ForgotPasswordRequestDTO request) {
         try {
             authService.forgotPassword(request.getEmail());
@@ -75,7 +75,7 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("forgot-password/sms")
+    @PostMapping("forget-password/sms")
     public ResponseEntity<BaseResult> forgotPasswordSMS(@RequestBody ForgotPasswordSMSRequestDTO request) {
         try {
             authService.forgotPasswordSMS(request.getPhone());

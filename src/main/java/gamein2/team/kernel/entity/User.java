@@ -98,6 +98,6 @@ public class User {
 
     public ProfileInfoDTO toProfileDTO() {
         return new ProfileInfoDTO(name, persianName, persianSurname, englishName, englishSurname, gender, dob, education,
-                school, major, yearOfEntrance, province, city, introductionMethod, team == null ? null : team.getName());
+                school, major, yearOfEntrance, province, city, introductionMethod);
     }
 }

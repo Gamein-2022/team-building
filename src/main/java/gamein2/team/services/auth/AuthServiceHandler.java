@@ -131,7 +131,7 @@ public class AuthServiceHandler implements AuthService {
             throw new BadRequestException("کد نامعتبر!");
         }
         if (password == null || password.length() < 8) {
-            throw new BadRequestException("طول رمز عبور ۸ حرف یا بیشتر باشد!");
+            throw new BadRequestException("طول رمز عبور باید ۸ حرف یا بیشتر باشد!");
         }
 
         User user = userOptional.get();

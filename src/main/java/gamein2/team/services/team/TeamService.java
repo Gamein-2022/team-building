@@ -1,5 +1,6 @@
 package gamein2.team.services.team;
 
+import gamein2.team.kernel.dto.request.ProfileInfoRequestDTO;
 import gamein2.team.kernel.dto.result.ProfileInfoDTO;
 import gamein2.team.kernel.dto.result.TeamInfoResultDTO;
 import gamein2.team.kernel.dto.result.TeamOfferDTO;
@@ -15,11 +16,13 @@ import java.util.List;
 
 public interface TeamService {
     ProfileInfoDTO getProfile(User user);
-    ProfileInfoDTO updateProfile(User user, ProfileInfoDTO newProfile);
+    ProfileInfoDTO updateProfile(User user, ProfileInfoRequestDTO newProfile);
     List<UserDTO> getUsers(User user) throws BadRequestException;
     TeamOfferDTO requestTeamJoin(Team team, User owner, Long userId) throws UnauthorizedException, BadRequestException;
     List<TeamOfferDTO> getMyOffers(User user) throws BadRequestException;
     List<TeamOfferDTO> getTeamOffers(Team team, User user) throws BadRequestException, UnauthorizedException;
     TeamInfoResultDTO acceptOffer(User user, Long offerId) throws BadRequestException;
     ProfileInfoDTO leaveTeam(User user) throws BadRequestException;
+    TeamInfoResultDTO getTeamInfo(Team team, User user) throws BadRequestException;
+    TeamInfoResultDTO createTeam(User user, String name) throws BadRequestException;
 }
