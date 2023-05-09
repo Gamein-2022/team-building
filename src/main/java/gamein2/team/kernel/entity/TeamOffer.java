@@ -29,6 +29,9 @@ public class TeamOffer {
     @ManyToOne(optional = false)
     private User user;
 
+    @Column(name = "declined", columnDefinition = "boolean default false")
+    private Boolean declined;
+
     public TeamOfferDTO toDTO() {
         return new TeamOfferDTO(id, team.getName(), user.getName());
     }

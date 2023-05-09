@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TeamOfferRepository extends JpaRepository<TeamOffer, Long> {
-    List<TeamOffer> findAllByUser_Id(Long userId);
+    List<TeamOffer> findAllByUser_IdAndDeclinedIsFalse(Long userId);
     List<TeamOffer> findAllByTeam_Id(Long teamId);
     Optional<TeamOffer> findByTeam_IdAndUser_Id(Long teamId, Long userId);
+    void deleteAllByTeam_Id(Long teamId);
 }

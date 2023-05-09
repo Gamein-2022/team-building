@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 public class ProfileInfoDTO {
+    private Boolean isComplete;
     private String username;
     private String persianName;
     private String persianSurname;

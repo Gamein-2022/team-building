@@ -149,4 +149,29 @@ public class TeamController {
             return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping(value = "sent-offers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BaseResult> cancelOffer(@ModelAttribute AuthInfo authInfo, @PathVariable Long id) {
+        try {
+            return new ResponseEntity<>(ServiceResult.createResult(serviceHandler.cancelOffer(authInfo.getUser(), id)),
+                    HttpStatus.OK);
+        } catch (BadRequestException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @DeleteMapping(value = "offers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BaseResult> declineOffer(@ModelAttribute AuthInfo authInfo, @PathVariable Long id) {
+        try {
+            return new ResponseEntity<>(ServiceResult.createResult(serviceHandler.declineOffer(authInfo.getUser(), id)),
+                    HttpStatus.OK);
+        } catch (BadRequestException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

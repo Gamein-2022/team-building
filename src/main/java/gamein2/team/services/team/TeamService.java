@@ -25,4 +25,6 @@ public interface TeamService {
     ProfileInfoDTO leaveTeam(User user) throws BadRequestException;
     TeamInfoResultDTO getTeamInfo(Team team, User user) throws BadRequestException;
     TeamInfoResultDTO createTeam(User user, String name) throws BadRequestException;
+    List<TeamOfferDTO> cancelOffer(User user, Long offerId) throws BadRequestException, UnauthorizedException;
+    List<TeamOfferDTO> declineOffer(User user, Long offerId) throws BadRequestException;
 }

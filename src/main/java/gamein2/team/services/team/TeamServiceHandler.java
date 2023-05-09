@@ -49,6 +49,7 @@ public class TeamServiceHandler implements TeamService {
         user.setProvince(newProfile.getProvince());
         user.setCity(newProfile.getCity());
         user.setIntroductionMethod(newProfile.getIntroductionMethod());
+        user.setName(newProfile.getUsername());
 
         return userRepository.save(user).toProfileDTO();
     }
@@ -86,7 +87,7 @@ public class TeamServiceHandler implements TeamService {
     @Override
     public List<TeamOfferDTO> getMyOffers(User user) throws BadRequestException {
         checkProfileCompletion(user);
-        return teamOfferRepository.findAllByUser_Id(user.getId()).stream().map(TeamOffer::toDTO).collect(Collectors.toList());
+        return teamOfferRepository.findAllByUser_IdAndDeclinedIsFalse(user.getId()).stream().map(TeamOffer::toDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -134,6 +135,7 @@ public class TeamServiceHandler implements TeamService {
             team.getUsers().forEach(u -> {
                 u.setTeam(null);
             });
+            teamOfferRepository.deleteAllByTeam_Id(team.getId());
             userRepository.saveAll(team.getUsers());
         } else {
             team.setUsers(team.getUsers().stream().filter(u -> u.getId().equals(user.getId())).toList());
@@ -175,6 +177,35 @@ public class TeamServiceHandler implements TeamService {
         return new TeamInfoResultDTO(team.getName(),
                 team.getUsers().stream().map(User::toDTO).collect(Collectors.toList()),
                 true);
+    }
+
+    @Override
+    public List<TeamOfferDTO> cancelOffer(User user, Long offerId) throws BadRequestException, UnauthorizedException {
+        Optional<TeamOffer> offerOptional = teamOfferRepository.findById(offerId);
+        if (offerOptional.isEmpty()) {
+            throw new BadRequestException("درخواست اضافه شدن به تیم یافت نشد!");
+        }
+        TeamOffer teamOffer = offerOptional.get();
+        if (!user.getId().equals(teamOffer.getTeam().getOwner().getId())) {
+            throw new BadRequestException("درخواست اضافه شدن به تیم یافت نشد!");
+        }
+        teamOfferRepository.delete(teamOffer);
+        return getTeamOffers(teamOffer.getTeam(), user);
+    }
+
+    @Override
+    public List<TeamOfferDTO> declineOffer(User user, Long offerId) throws BadRequestException {
+        Optional<TeamOffer> offerOptional = teamOfferRepository.findById(offerId);
+        if (offerOptional.isEmpty()) {
+            throw new BadRequestException("درخواست اضافه شدن به تیم یافت نشد!");
+        }
+        TeamOffer teamOffer = offerOptional.get();
+        if (!user.getId().equals(teamOffer.getUser().getId())) {
+            throw new BadRequestException("درخواست اضافه شدن به تیم یافت نشد!");
+        }
+        teamOffer.setDeclined(true);
+        teamOfferRepository.save(teamOffer);
+        return getMyOffers(user);
     }
 
     private void validateTeamAccess(Team team, User user) throws BadRequestException, UnauthorizedException {
