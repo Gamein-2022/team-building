@@ -95,6 +95,7 @@ public class TeamServiceHandler implements TeamService {
         TeamOffer offer = new TeamOffer();
         offer.setTeam(team);
         offer.setUser(userOptional.get());
+        offer.setDeclined(false);
         return teamOfferRepository.save(offer).toDTO();
     }
 
