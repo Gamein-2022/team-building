@@ -72,6 +72,7 @@ public class TeamServiceHandler implements TeamService {
             BadRequestException {
         validateTeamAccess(team, user);
         if (userId.equals(user.getId())) {
+
             throw new BadRequestException("شما نمی‌توانید به خود درخواست بدهید!");
         }
 
