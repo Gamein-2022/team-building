@@ -57,7 +57,8 @@ public class TeamServiceHandler implements TeamService {
     @Override
     public List<UserDTO> getUsers(User user) throws BadRequestException {
         checkProfileCompletion(user);
-        return userRepository.findAllByIdNot(user.getId()).stream().map(User::toDTO).collect(Collectors.toList());
+        return userRepository.findAllByIdNot(user.getId()).stream().filter(User::isComplete)
+                .map(User::toDTO).collect(Collectors.toList());
     }
 
     @Override

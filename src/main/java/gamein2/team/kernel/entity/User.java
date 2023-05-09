@@ -92,17 +92,20 @@ public class User {
     @Column(name = "password_code", unique = true)
     private String passwordCode;
 
+    public Boolean isComplete() {
+        return this.getCity() != null && this.getDob() != null && this.getEducation() != null && this.getGender() != null
+                && this.getEnglishName() != null && this.getEnglishSurname() != null && this.getPersianName() != null
+                && this.getPersianSurname() != null && this.getMajor() != null && this.getName() != null
+                && this.getIntroductionMethod() != null && this.getProvince() != null && this.getSchool() != null
+                && this.getYearOfEntrance() != null;
+    }
+
     public UserDTO toDTO() {
         return new UserDTO(id, name, persianName, persianSurname, gender);
     }
 
     public ProfileInfoDTO toProfileDTO() {
-        return new ProfileInfoDTO(this.getCity() != null && this.getDob() != null && this.getEducation() !=
-                null && this.getGender() != null
-                && this.getEnglishName() != null && this.getEnglishSurname() != null && this.getPersianName() != null
-                && this.getPersianSurname() != null && this.getMajor() != null && this.getName() != null
-                && this.getIntroductionMethod() != null && this.getProvince() != null && this.getSchool() != null
-                && this.getYearOfEntrance() != null, name, persianName, persianSurname, englishName, englishSurname,
+        return new ProfileInfoDTO(isComplete(), name, persianName, persianSurname, englishName, englishSurname,
                 gender, dob, education,
                 school, major, yearOfEntrance, province, city, introductionMethod);
     }
