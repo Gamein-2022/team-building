@@ -132,7 +132,9 @@ public class TeamServiceHandler implements TeamService {
             throw new BadRequestException("ظرفیت این تیم تکمیل است!");
         }
         team.getUsers().add(user);
+        offer.setDeclined(true);
         user.setTeam(team);
+
         teamRepository.save(team);
         userRepository.save(user);
         return new TeamInfoResultDTO(team.getName(),
