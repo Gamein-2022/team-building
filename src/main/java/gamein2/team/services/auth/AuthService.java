@@ -11,7 +11,8 @@ import gamein2.team.kernel.iao.AuthInfo;
 
 public interface AuthService {
     RegisterAndLoginResultDTO login(String email, String phone, String password) throws UserNotFoundException, BadRequestException;
-    RegisterAndLoginResultDTO register(String phone, String email, String password) throws BadRequestException, UserAlreadyExist;
+    RegisterAndLoginResultDTO register(String phone, String email, String password,String persianName,
+                                       String persianLastName) throws BadRequestException, UserAlreadyExist;
     User getUserById(Long userId) throws BadRequestException;
     void forgotPassword(String email) throws UserNotFoundException;
     void forgotPasswordSMS(String phone) throws UserNotFoundException;
