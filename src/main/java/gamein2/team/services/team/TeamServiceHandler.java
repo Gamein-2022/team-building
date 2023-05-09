@@ -178,7 +178,6 @@ public class TeamServiceHandler implements TeamService {
         }
 
         Team team = new Team();
-
         team.setName(teamName);
         team.setUsers(new ArrayList<>());
         team.getUsers().add(user);
@@ -186,7 +185,7 @@ public class TeamServiceHandler implements TeamService {
 
         try {
             teamRepository.save(team);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BadRequestException("این نام برای تیم دیگری است.");
         }
 
