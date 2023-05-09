@@ -158,9 +158,9 @@ public class TeamServiceHandler implements TeamService {
             teamRepository.delete(team);
             userRepository.saveAll(team.getUsers());
         } else {
-            team.setUsers(team.getUsers().stream().filter(u -> u.getId().equals(user.getId())).toList());
-            user.setTeam(null);
+            team.getUsers().remove(user);
             teamRepository.save(team);
+            user.setTeam(null);
             userRepository.save(user);
         }
         return user.toProfileDTO();
