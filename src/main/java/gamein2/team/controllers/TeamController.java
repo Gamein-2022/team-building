@@ -83,6 +83,7 @@ public class TeamController {
             return new ResponseEntity<>(ServiceResult.createResult(serviceHandler.getUsers(authInfo.getUser())),
                     HttpStatus.OK);
         } catch (BadRequestException e) {
+
             logger.error(e.getMessage(), e);
             return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
