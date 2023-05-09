@@ -54,6 +54,7 @@ public class TeamServiceHandler implements TeamService {
         try {
             return userRepository.save(user).toProfileDTO();
         }catch (Exception e){
+
             throw new BadRequestException("این نام کاربری قبلا استفاده شده است.");
 
         }
