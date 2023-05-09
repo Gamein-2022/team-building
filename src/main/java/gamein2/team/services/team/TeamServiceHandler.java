@@ -76,6 +76,7 @@ public class TeamServiceHandler implements TeamService {
             throw new BadRequestException("شما نمی‌توانید به خود درخواست بدهید!");
         }
 
+
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
             throw new BadRequestException("کاربر درخواست شده وجود ندارد!");
