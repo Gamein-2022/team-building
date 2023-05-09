@@ -145,6 +145,7 @@ public class TeamServiceHandler implements TeamService {
                 u.setTeam(null);
             });
             teamOfferRepository.deleteAllByTeam_Id(team.getId());
+            teamRepository.delete(team);
             userRepository.saveAll(team.getUsers());
         } else {
             team.setUsers(team.getUsers().stream().filter(u -> u.getId().equals(user.getId())).toList());
