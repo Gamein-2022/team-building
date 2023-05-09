@@ -10,9 +10,8 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "team_offers", uniqueConstraints={
-        @UniqueConstraint(columnNames = {"team_id", "user_id"})
-})
+@Table(name = "team_offers"/*, uniqueConstraints={
+        @UniqueConstraint(columnNames = {"team_id", "user_id"})}*/)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

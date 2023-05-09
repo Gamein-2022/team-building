@@ -10,6 +10,7 @@ import gamein2.team.kernel.repos.TeamOfferRepository;
 import gamein2.team.kernel.repos.TeamRepository;
 import gamein2.team.kernel.repos.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,9 +85,8 @@ public class TeamServiceHandler implements TeamService {
         }
         if (userOptional.get().getTeam() != null)
             throw new BadRequestException("شما نمی‌توانید به کابری که تیم دارد درخواست بدهید");
-        Optional<TeamOffer> offerOptional = teamOfferRepository.findByTeam_IdAndUser_Id(team.getId(),
-                userOptional.get().getId());
-        if (offerOptional.isPresent()) {
+        List<TeamOffer> offers = teamOfferRepository.findAllByTeamIdAndUserIdAndDeclinedIsFalse(team.getId(), userOptional.get().getId());
+        if (offers.size() > 0) {
             throw new BadRequestException("شما قبلا به این کاربر درخواست داده‌اید!");
         }
 
@@ -109,7 +109,7 @@ public class TeamServiceHandler implements TeamService {
             UnauthorizedException, UserNotFoundException {
         checkProfileCompletion(user);
         validateTeamAccess(team, user);
-        return teamOfferRepository.findAllByTeam_Id(team.getId()).stream().map(TeamOffer::toDTO).collect(Collectors.toList());
+        return teamOfferRepository.findAllByTeamIdAndDeclinedIsFalse(team.getId()).stream().map(TeamOffer::toDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -140,6 +140,7 @@ public class TeamServiceHandler implements TeamService {
     }
 
     @Override
+    @Transactional
     public ProfileInfoDTO leaveTeam(User user) throws BadRequestException {
         checkProfileCompletion(user);
         Team team = user.getTeam();
