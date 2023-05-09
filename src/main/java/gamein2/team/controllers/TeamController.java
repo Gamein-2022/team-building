@@ -10,6 +10,7 @@ import gamein2.team.kernel.dto.result.ServiceResult;
 import gamein2.team.kernel.dto.result.TeamInfoResultDTO;
 import gamein2.team.kernel.exceptions.BadRequestException;
 import gamein2.team.kernel.exceptions.UnauthorizedException;
+import gamein2.team.kernel.exceptions.UserNotFoundException;
 import gamein2.team.kernel.iao.AuthInfo;
 import gamein2.team.services.team.TeamService;
 import org.slf4j.Logger;
@@ -103,6 +104,9 @@ public class TeamController {
         } catch (BadRequestException e) {
             logger.error(e.getMessage(), e);
             return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (UserNotFoundException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -129,6 +133,9 @@ public class TeamController {
         } catch (UnauthorizedException e) {
             logger.error(e.getMessage(), e);
             return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.UNAUTHORIZED);
+        } catch (UserNotFoundException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -167,6 +174,9 @@ public class TeamController {
         } catch (UnauthorizedException e) {
             logger.error(e.getMessage(), e);
             return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.UNAUTHORIZED);
+        } catch (UserNotFoundException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 
