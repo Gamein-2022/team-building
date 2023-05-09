@@ -10,4 +10,6 @@ public class TeamOfferDTO {
     private Long id;
     private String teamName;
     private String Username;
+    private String persianName;
+    private String persianSurname;
 }
