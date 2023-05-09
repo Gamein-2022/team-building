@@ -5,6 +5,7 @@ import gamein2.team.kernel.dto.result.*;
 import gamein2.team.kernel.entity.*;
 import gamein2.team.kernel.exceptions.BadRequestException;
 import gamein2.team.kernel.exceptions.UnauthorizedException;
+import gamein2.team.kernel.exceptions.UserNotFoundException;
 import gamein2.team.kernel.repos.TeamOfferRepository;
 import gamein2.team.kernel.repos.TeamRepository;
 import gamein2.team.kernel.repos.UserRepository;
@@ -35,7 +36,7 @@ public class TeamServiceHandler implements TeamService {
     }
 
     @Override
-    public ProfileInfoDTO updateProfile(User user, ProfileInfoRequestDTO newProfile) {
+    public ProfileInfoDTO updateProfile(User user, ProfileInfoRequestDTO newProfile) throws BadRequestException {
         user.setPersianName(newProfile.getPersianName());
         user.setPersianSurname(newProfile.getPersianSurname());
         user.setEnglishName(newProfile.getEnglishName());
@@ -51,7 +52,14 @@ public class TeamServiceHandler implements TeamService {
         user.setIntroductionMethod(newProfile.getIntroductionMethod());
         user.setName(newProfile.getUsername());
 
-        return userRepository.save(user).toProfileDTO();
+        try {
+            return userRepository.save(user).toProfileDTO();
+        }catch (Exception e){
+
+            throw new BadRequestException("این نام کاربری قبلا استفاده شده است .");
+
+        }
+
     }
 
     @Override
@@ -63,7 +71,8 @@ public class TeamServiceHandler implements TeamService {
 
     @Override
     public TeamOfferDTO requestTeamJoin(Team team, User user, Long userId) throws UnauthorizedException,
-            BadRequestException {
+            BadRequestException, UserNotFoundException {
+        checkProfileCompletion(user);
         validateTeamAccess(team, user);
         if (userId.equals(user.getId())) {
             throw new BadRequestException("شما نمی‌توانید به خود درخواست بدهید!");
@@ -73,11 +82,15 @@ public class TeamServiceHandler implements TeamService {
         if (userOptional.isEmpty()) {
             throw new BadRequestException("کاربر درخواست شده وجود ندارد!");
         }
+        if (userOptional.get().getTeam() != null)
+            throw new BadRequestException("شما نمی‌توانید به کابری که تیم دارد درخواست بدهید");
         Optional<TeamOffer> offerOptional = teamOfferRepository.findByTeam_IdAndUser_Id(team.getId(),
                 userOptional.get().getId());
         if (offerOptional.isPresent()) {
             throw new BadRequestException("شما قبلا به این کاربر درخواست داده‌اید!");
         }
+
+
 
         TeamOffer offer = new TeamOffer();
         offer.setTeam(team);
@@ -93,7 +106,8 @@ public class TeamServiceHandler implements TeamService {
 
     @Override
     public List<TeamOfferDTO> getTeamOffers(Team team, User user) throws BadRequestException,
-            UnauthorizedException {
+            UnauthorizedException, UserNotFoundException {
+        checkProfileCompletion(user);
         validateTeamAccess(team, user);
         return teamOfferRepository.findAllByTeam_Id(team.getId()).stream().map(TeamOffer::toDTO).collect(Collectors.toList());
     }
@@ -137,6 +151,7 @@ public class TeamServiceHandler implements TeamService {
                 u.setTeam(null);
             });
             teamOfferRepository.deleteAllByTeam_Id(team.getId());
+            teamRepository.delete(team);
             userRepository.saveAll(team.getUsers());
         } else {
             team.setUsers(team.getUsers().stream().filter(u -> u.getId().equals(user.getId())).toList());
@@ -169,7 +184,11 @@ public class TeamServiceHandler implements TeamService {
         team.getUsers().add(user);
         team.setOwner(user);
 
-        teamRepository.save(team);
+        try {
+            teamRepository.save(team);
+        }catch (Exception e){
+            throw new BadRequestException("این نام برای تیم دیگری است.");
+        }
 
         user.setTeam(team);
 
@@ -181,7 +200,7 @@ public class TeamServiceHandler implements TeamService {
     }
 
     @Override
-    public List<TeamOfferDTO> cancelOffer(User user, Long offerId) throws BadRequestException, UnauthorizedException {
+    public List<TeamOfferDTO> cancelOffer(User user, Long offerId) throws BadRequestException, UnauthorizedException, UserNotFoundException {
         Optional<TeamOffer> offerOptional = teamOfferRepository.findById(offerId);
         if (offerOptional.isEmpty()) {
             throw new BadRequestException("درخواست اضافه شدن به تیم یافت نشد!");
@@ -209,10 +228,10 @@ public class TeamServiceHandler implements TeamService {
         return getMyOffers(user);
     }
 
-    private void validateTeamAccess(Team team, User user) throws BadRequestException, UnauthorizedException {
+    private void validateTeamAccess(Team team, User user) throws BadRequestException, UnauthorizedException, UserNotFoundException {
         checkProfileCompletion(user);
         if (team == null) {
-            throw new BadRequestException("شما تیمی ندارید!");
+            throw new UserNotFoundException("شما تیمی ندارید!");
         }
         if (!team.getOwner().getId().equals(user.getId())) {
             throw new UnauthorizedException("شما اجازه‌ی این کار را ندارید!");

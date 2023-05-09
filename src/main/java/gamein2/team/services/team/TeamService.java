@@ -9,6 +9,7 @@ import gamein2.team.kernel.entity.Team;
 import gamein2.team.kernel.entity.User;
 import gamein2.team.kernel.exceptions.BadRequestException;
 import gamein2.team.kernel.exceptions.UnauthorizedException;
+import gamein2.team.kernel.exceptions.UserNotFoundException;
 
 
 import java.util.List;
@@ -16,15 +17,15 @@ import java.util.List;
 
 public interface TeamService {
     ProfileInfoDTO getProfile(User user);
-    ProfileInfoDTO updateProfile(User user, ProfileInfoRequestDTO newProfile);
+    ProfileInfoDTO updateProfile(User user, ProfileInfoRequestDTO newProfile) throws BadRequestException;
     List<UserDTO> getUsers(User user) throws BadRequestException;
-    TeamOfferDTO requestTeamJoin(Team team, User owner, Long userId) throws UnauthorizedException, BadRequestException;
+    TeamOfferDTO requestTeamJoin(Team team, User owner, Long userId) throws UnauthorizedException, BadRequestException, UserNotFoundException;
     List<TeamOfferDTO> getMyOffers(User user) throws BadRequestException;
-    List<TeamOfferDTO> getTeamOffers(Team team, User user) throws BadRequestException, UnauthorizedException;
+    List<TeamOfferDTO> getTeamOffers(Team team, User user) throws BadRequestException, UnauthorizedException, UserNotFoundException;
     TeamInfoResultDTO acceptOffer(User user, Long offerId) throws BadRequestException;
     ProfileInfoDTO leaveTeam(User user) throws BadRequestException;
     TeamInfoResultDTO getTeamInfo(Team team, User user) throws BadRequestException;
     TeamInfoResultDTO createTeam(User user, String name) throws BadRequestException;
-    List<TeamOfferDTO> cancelOffer(User user, Long offerId) throws BadRequestException, UnauthorizedException;
+    List<TeamOfferDTO> cancelOffer(User user, Long offerId) throws BadRequestException, UnauthorizedException, UserNotFoundException;
     List<TeamOfferDTO> declineOffer(User user, Long offerId) throws BadRequestException;
 }

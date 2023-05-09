@@ -33,6 +33,6 @@ public class TeamOffer {
     private Boolean declined;
 
     public TeamOfferDTO toDTO() {
-        return new TeamOfferDTO(id, team.getName(), user.getName());
+        return new TeamOfferDTO(id, team.getName(), user.getName(), user.getPersianName(), user.getPersianSurname());
     }
 }
