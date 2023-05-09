@@ -68,8 +68,13 @@ public class TeamController {
     @PutMapping(value = "profile", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResult> updateProfile(@ModelAttribute AuthInfo authInfo,
                                                     @RequestBody ProfileInfoRequestDTO profile) {
-        return new ResponseEntity<>(ServiceResult.createResult(serviceHandler.updateProfile(authInfo.getUser(), profile)),
-                HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(ServiceResult.createResult(serviceHandler.updateProfile(authInfo.getUser(), profile)),
+                    HttpStatus.OK);
+        } catch (BadRequestException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "users", produces = MediaType.APPLICATION_JSON_VALUE)

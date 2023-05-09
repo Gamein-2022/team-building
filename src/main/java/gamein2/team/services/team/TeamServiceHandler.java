@@ -35,7 +35,7 @@ public class TeamServiceHandler implements TeamService {
     }
 
     @Override
-    public ProfileInfoDTO updateProfile(User user, ProfileInfoRequestDTO newProfile) {
+    public ProfileInfoDTO updateProfile(User user, ProfileInfoRequestDTO newProfile) throws BadRequestException {
         user.setPersianName(newProfile.getPersianName());
         user.setPersianSurname(newProfile.getPersianSurname());
         user.setEnglishName(newProfile.getEnglishName());
@@ -51,7 +51,12 @@ public class TeamServiceHandler implements TeamService {
         user.setIntroductionMethod(newProfile.getIntroductionMethod());
         user.setName(newProfile.getUsername());
 
-        return userRepository.save(user).toProfileDTO();
+        try {
+            return userRepository.save(user).toProfileDTO();
+        }catch (Exception e){
+            throw new BadRequestException("این نام کاربری قبلا استفاده شده است.");
+        }
+
     }
 
     @Override

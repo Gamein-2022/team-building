@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface TeamService {
     ProfileInfoDTO getProfile(User user);
-    ProfileInfoDTO updateProfile(User user, ProfileInfoRequestDTO newProfile);
+    ProfileInfoDTO updateProfile(User user, ProfileInfoRequestDTO newProfile) throws BadRequestException;
     List<UserDTO> getUsers(User user) throws BadRequestException;
     TeamOfferDTO requestTeamJoin(Team team, User owner, Long userId) throws UnauthorizedException, BadRequestException;
     List<TeamOfferDTO> getMyOffers(User user) throws BadRequestException;
