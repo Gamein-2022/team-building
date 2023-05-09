@@ -164,7 +164,7 @@ public class TeamController {
     }
 
     @DeleteMapping(value = "sent-offers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResult> cancelOffer(@ModelAttribute AuthInfo authInfo, @PathVariable Long id) {
+    public ResponseEntity<BaseResult>  cancelOffer(@ModelAttribute AuthInfo authInfo, @PathVariable Long id) {
         try {
             return new ResponseEntity<>(ServiceResult.createResult(serviceHandler.cancelOffer(authInfo.getUser(), id)),
                     HttpStatus.OK);
