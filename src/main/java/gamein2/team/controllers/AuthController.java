@@ -38,7 +38,8 @@ public class AuthController {
         logger.info(request.getEmail(), " --- ", request.getPhone(), " --- ", request
                 .getPassword());
         try {
-            RegisterAndLoginResultDTO result = authService.login(request.getEmail(), request.getPhone(), request.getPassword());
+            RegisterAndLoginResultDTO result = authService.login(request.getEmail().toLowerCase(), request.getPhone(),
+                    request.getPassword());
             return new ResponseEntity<>(ServiceResult.createResult(result), HttpStatus.OK);
         } catch (UserNotFoundException e) {
             logger.error(e.toString());
@@ -51,12 +52,12 @@ public class AuthController {
         }
     }
 
-    @PostMapping(value = "/register",
+    @PostMapping(value = "register",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResult> register(@RequestBody RegisterAndLoginRequestDTO request) {
         try {
-            RegisterAndLoginResultDTO result = authService.register(request.getPhone(), request.getEmail(),
+            RegisterAndLoginResultDTO result = authService.register(request.getPhone(), request.getEmail().toLowerCase(),
                     request.getPassword(),request.getPersianName(),request.getPersianLastName());
             return new ResponseEntity<>(ServiceResult.createResult(result), HttpStatus.OK);
         } catch (BadRequestException | UserAlreadyExist e) {
