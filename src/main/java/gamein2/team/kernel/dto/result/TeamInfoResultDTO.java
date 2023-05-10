@@ -10,6 +10,6 @@ import java.util.List;
 @Getter
 public class TeamInfoResultDTO {
     private String name;
-    private List<UserDTO> users;
+    private List<TeamUserDTO> users;
     private Boolean isOwner;
 }

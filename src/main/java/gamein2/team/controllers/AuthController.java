@@ -58,7 +58,7 @@ public class AuthController {
     public ResponseEntity<BaseResult> register(@RequestBody RegisterAndLoginRequestDTO request) {
         try {
             RegisterAndLoginResultDTO result = authService.register(request.getPhone(), request.getEmail().toLowerCase(),
-                    request.getPassword());
+                    request.getPassword(),request.getPersianName(),request.getPersianLastName());
             return new ResponseEntity<>(ServiceResult.createResult(result), HttpStatus.OK);
         } catch (BadRequestException | UserAlreadyExist e) {
             logger.error(e.toString());

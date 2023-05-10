@@ -66,7 +66,7 @@ public class TeamServiceHandler implements TeamService {
     @Override
     public List<UserDTO> getUsers(User user) throws BadRequestException {
         checkProfileCompletion(user);
-        return userRepository.findAllByIdNot(user.getId()).stream().filter(User::isComplete)
+        return userRepository.findAllByIdNotAndTeamIsNull(user.getId()).stream().filter(User::isComplete)
                 .map(User::toDTO).collect(Collectors.toList());
     }
 
@@ -95,13 +95,18 @@ public class TeamServiceHandler implements TeamService {
         TeamOffer offer = new TeamOffer();
         offer.setTeam(team);
         offer.setUser(userOptional.get());
+        offer.setDeclined(false);
         return teamOfferRepository.save(offer).toDTO();
     }
 
     @Override
     public List<TeamOfferDTO> getMyOffers(User user) throws BadRequestException {
         checkProfileCompletion(user);
-        return teamOfferRepository.findAllByUser_IdAndDeclinedIsFalse(user.getId()).stream().map(TeamOffer::toDTO).collect(Collectors.toList());
+        if (user.getTeam() == null){
+
+            return teamOfferRepository.findAllByUser_IdAndDeclinedIsFalse(user.getId()).stream().map(TeamOffer::toDTO).collect(Collectors.toList());
+        }else
+            return new ArrayList<>();
     }
 
     @Override
@@ -131,11 +136,13 @@ public class TeamServiceHandler implements TeamService {
             throw new BadRequestException("ظرفیت این تیم تکمیل است!");
         }
         team.getUsers().add(user);
+        offer.setDeclined(true);
         user.setTeam(team);
+
         teamRepository.save(team);
         userRepository.save(user);
         return new TeamInfoResultDTO(team.getName(),
-                team.getUsers().stream().map(User::toDTO).collect(Collectors.toList()),
+                team.getUsers().stream().map(User::userDTO).collect(Collectors.toList()),
                 false);
     }
 
@@ -155,9 +162,9 @@ public class TeamServiceHandler implements TeamService {
             teamRepository.delete(team);
             userRepository.saveAll(team.getUsers());
         } else {
-            team.setUsers(team.getUsers().stream().filter(u -> u.getId().equals(user.getId())).toList());
-            user.setTeam(null);
+            team.getUsers().remove(user);
             teamRepository.save(team);
+            user.setTeam(null);
             userRepository.save(user);
         }
         return user.toProfileDTO();
@@ -166,8 +173,9 @@ public class TeamServiceHandler implements TeamService {
     @Override
     public TeamInfoResultDTO getTeamInfo(Team team, User user) throws BadRequestException {
         checkProfileCompletion(user);
-        return new TeamInfoResultDTO(team == null ? null : team.getName(),
-                team == null ? null : team.getUsers().stream().map(User::toDTO).collect(Collectors.toList()),
+        return new TeamInfoResultDTO(
+                team == null ? null : team.getName(),
+                team == null ? null : team.getUsers().stream().map(User::userDTO).collect(Collectors.toList()),
                 team == null ? null : user.getId().equals(team.getOwner().getId()));
     }
 
@@ -195,7 +203,7 @@ public class TeamServiceHandler implements TeamService {
         userRepository.save(user);
 
         return new TeamInfoResultDTO(team.getName(),
-                team.getUsers().stream().map(User::toDTO).collect(Collectors.toList()),
+                team.getUsers().stream().map(User::userDTO).collect(Collectors.toList()),
                 true);
     }
 

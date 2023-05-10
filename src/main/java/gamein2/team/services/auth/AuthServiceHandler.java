@@ -68,7 +68,8 @@ public class AuthServiceHandler implements AuthService {
 
 
     @Override
-    public RegisterAndLoginResultDTO register(String phone, String email, String password)
+    public RegisterAndLoginResultDTO register(String phone, String email, String password,String persianName,
+                                              String persianLastName)
             throws BadRequestException, UserAlreadyExist {
 
         EmailValidator emailValidator = EmailValidator.getInstance(false);
@@ -84,6 +85,8 @@ public class AuthServiceHandler implements AuthService {
             throw new BadRequestException("اطلاعات وارد شده صحیح نمی باشد");
         }
 
+
+
         Optional<User> userOptional = userRepository.findByEmailOrPhone(email, phone);
 
         if (userOptional.isPresent()) {
@@ -94,6 +97,8 @@ public class AuthServiceHandler implements AuthService {
         user.setPhone(phone);
         user.setEmail(email);
         user.setPassword((new BCryptPasswordEncoder()).encode(password));
+        user.setPersianName(persianName);
+        user.setPersianSurname(persianLastName);
 
         userRepository.save(user);
 
