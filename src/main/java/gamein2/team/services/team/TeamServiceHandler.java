@@ -102,7 +102,11 @@ public class TeamServiceHandler implements TeamService {
     @Override
     public List<TeamOfferDTO> getMyOffers(User user) throws BadRequestException {
         checkProfileCompletion(user);
-        return teamOfferRepository.findAllByUser_IdAndDeclinedIsFalse(user.getId()).stream().map(TeamOffer::toDTO).collect(Collectors.toList());
+        if (user.getTeam() == null){
+
+            return teamOfferRepository.findAllByUser_IdAndDeclinedIsFalse(user.getId()).stream().map(TeamOffer::toDTO).collect(Collectors.toList());
+        }else
+            return new ArrayList<>();
     }
 
     @Override
@@ -138,7 +142,7 @@ public class TeamServiceHandler implements TeamService {
         teamRepository.save(team);
         userRepository.save(user);
         return new TeamInfoResultDTO(team.getName(),
-                team.getUsers().stream().map(User::toDTO).collect(Collectors.toList()),
+                team.getUsers().stream().map(User::userDTO).collect(Collectors.toList()),
                 false);
     }
 
@@ -169,8 +173,9 @@ public class TeamServiceHandler implements TeamService {
     @Override
     public TeamInfoResultDTO getTeamInfo(Team team, User user) throws BadRequestException {
         checkProfileCompletion(user);
-        return new TeamInfoResultDTO(team == null ? null : team.getName(),
-                team == null ? null : team.getUsers().stream().map(User::toDTO).collect(Collectors.toList()),
+        return new TeamInfoResultDTO(
+                team == null ? null : team.getName(),
+                team == null ? null : team.getUsers().stream().map(User::userDTO).collect(Collectors.toList()),
                 team == null ? null : user.getId().equals(team.getOwner().getId()));
     }
 
@@ -198,7 +203,7 @@ public class TeamServiceHandler implements TeamService {
         userRepository.save(user);
 
         return new TeamInfoResultDTO(team.getName(),
-                team.getUsers().stream().map(User::toDTO).collect(Collectors.toList()),
+                team.getUsers().stream().map(User::userDTO).collect(Collectors.toList()),
                 true);
     }
 

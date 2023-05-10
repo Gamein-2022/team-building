@@ -1,6 +1,7 @@
 package gamein2.team.kernel.entity;
 
 import gamein2.team.kernel.dto.result.ProfileInfoDTO;
+import gamein2.team.kernel.dto.result.TeamUserDTO;
 import gamein2.team.kernel.dto.result.UserDTO;
 import gamein2.team.kernel.enums.Education;
 import gamein2.team.kernel.enums.Gender;
@@ -108,5 +109,9 @@ public class User {
         return new ProfileInfoDTO(isComplete(), name, persianName, persianSurname, englishName, englishSurname,
                 gender, dob, education,
                 school, major, yearOfEntrance, province, city, introductionMethod);
+    }
+
+    public TeamUserDTO userDTO(){
+        return new TeamUserDTO(id, name, persianName, persianSurname, gender,email);
     }
 }
