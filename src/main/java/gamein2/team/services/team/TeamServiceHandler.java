@@ -65,7 +65,7 @@ public class TeamServiceHandler implements TeamService {
 
     @Override
     public List<UserDTO> getUsers(User user) throws BadRequestException {
-        checkProfileCompletion(user);
+//        checkProfileCompletion(user);
         return userRepository.findAllByIdNotAndTeamIsNull(user.getId()).stream().filter(User::isComplete)
                 .map(User::toDTO).collect(Collectors.toList());
     }
@@ -73,7 +73,7 @@ public class TeamServiceHandler implements TeamService {
     @Override
     public TeamOfferDTO requestTeamJoin(Team team, User user, Long userId) throws UnauthorizedException,
             BadRequestException, UserNotFoundException {
-        checkProfileCompletion(user);
+//        checkProfileCompletion(user);
         validateTeamAccess(team, user);
         if (userId.equals(user.getId())) {
             throw new BadRequestException("شما نمی‌توانید به خود درخواست بدهید!");
@@ -101,7 +101,7 @@ public class TeamServiceHandler implements TeamService {
 
     @Override
     public List<TeamOfferDTO> getMyOffers(User user) throws BadRequestException {
-        checkProfileCompletion(user);
+//        checkProfileCompletion(user);
         if (user.getTeam() == null){
 
             return teamOfferRepository.findAllByUser_IdAndDeclinedIsFalse(user.getId()).stream().map(TeamOffer::toDTO).collect(Collectors.toList());
@@ -112,14 +112,14 @@ public class TeamServiceHandler implements TeamService {
     @Override
     public List<TeamOfferDTO> getTeamOffers(Team team, User user) throws BadRequestException,
             UnauthorizedException, UserNotFoundException {
-        checkProfileCompletion(user);
+//        checkProfileCompletion(user);
         validateTeamAccess(team, user);
         return teamOfferRepository.findAllByTeamIdAndDeclinedIsFalse(team.getId()).stream().map(TeamOffer::toDTO).collect(Collectors.toList());
     }
 
     @Override
     public TeamInfoResultDTO acceptOffer(User user, Long offerId) throws BadRequestException {
-        checkProfileCompletion(user);
+//        checkProfileCompletion(user);
         Optional<TeamOffer> teamOfferOptional = teamOfferRepository.findById(offerId);
         if (teamOfferOptional.isEmpty()) {
             throw new BadRequestException("درخواست اضافه شدن به تیم یافت نشد!");
@@ -149,7 +149,7 @@ public class TeamServiceHandler implements TeamService {
     @Override
     @Transactional
     public ProfileInfoDTO leaveTeam(User user) throws BadRequestException {
-        checkProfileCompletion(user);
+//        checkProfileCompletion(user);
         Team team = user.getTeam();
         if (team == null) {
             throw new BadRequestException("شما تیم ندارید!");
@@ -172,7 +172,7 @@ public class TeamServiceHandler implements TeamService {
 
     @Override
     public TeamInfoResultDTO getTeamInfo(Team team, User user) throws BadRequestException {
-        checkProfileCompletion(user);
+//        checkProfileCompletion(user);
         return new TeamInfoResultDTO(
                 team == null ? null : team.getName(),
                 team == null ? null : team.getUsers().stream().map(User::userDTO).collect(Collectors.toList()),
@@ -181,7 +181,7 @@ public class TeamServiceHandler implements TeamService {
 
     @Override
     public TeamInfoResultDTO createTeam(User user, String teamName) throws BadRequestException {
-        checkProfileCompletion(user);
+//        checkProfileCompletion(user);
         if (teamName == null || teamName.isEmpty()) {
             throw new BadRequestException("نام تیم نباید خالی باشد!");
         }
@@ -237,7 +237,7 @@ public class TeamServiceHandler implements TeamService {
     }
 
     private void validateTeamAccess(Team team, User user) throws BadRequestException, UnauthorizedException, UserNotFoundException {
-        checkProfileCompletion(user);
+//        checkProfileCompletion(user);
         if (team == null) {
             throw new UserNotFoundException("شما تیمی ندارید!");
         }
