@@ -17,11 +17,10 @@ import java.util.List;
 @Setter
 public class Team {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<User> users;
 
     @OneToOne(optional = false)

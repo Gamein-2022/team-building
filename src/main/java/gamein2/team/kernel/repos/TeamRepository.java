@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -17,5 +18,9 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     void resetTeamsRegion();
 
     Optional<Team> findTeamByName(String name);
+
+    @Query(value = "select t from Team as t where t.users.size = 1")
+    List<Team> getALoneTeams();
+
 
 }
