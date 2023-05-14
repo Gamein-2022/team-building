@@ -58,7 +58,7 @@ public class AuthController {
     public ResponseEntity<BaseResult> register(@RequestBody RegisterAndLoginRequestDTO request) {
         try {
             RegisterAndLoginResultDTO result = authService.register(request.getPhone(), request.getEmail().toLowerCase(),
-                    request.getPassword(),request.getPersianName(),request.getPersianLastName());
+                    request.getPassword(), request.getPersianName(), request.getPersianLastName());
             return new ResponseEntity<>(ServiceResult.createResult(result), HttpStatus.OK);
         } catch (BadRequestException | UserAlreadyExist e) {
             logger.error(e.toString());
@@ -70,7 +70,7 @@ public class AuthController {
     @PostMapping("forget-password")
     public ResponseEntity<BaseResult> forgotPassword(@RequestBody ForgotPasswordRequestDTO request) {
         try {
-            authService.forgotPassword(request.getEmail());
+            authService.forgotPassword(request.getPhone());
         } catch (UserNotFoundException e) {
             logger.error(e.getMessage(), e);
         }

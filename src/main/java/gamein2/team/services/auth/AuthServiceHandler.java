@@ -10,6 +10,7 @@ import gamein2.team.kernel.exceptions.UserNotFoundException;
 import gamein2.team.kernel.iao.AuthInfo;
 import gamein2.team.kernel.repos.UserRepository;
 import gamein2.team.kernel.util.JwtUtils;
+import gamein2.team.kernel.util.RestUtil;
 import it.ozimov.springboot.mail.model.Email;
 import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmail;
 import it.ozimov.springboot.mail.service.EmailService;
@@ -32,6 +33,12 @@ public class AuthServiceHandler implements AuthService {
     public EmailService emailService;
     @Value("${spring.mail.username}")
     private String sender;
+
+    @Value("${kavehnegar.base.url}")
+    private String kavehnegarBaseUrl;
+
+    @Value("${kavehnegar.template}")
+    private String kavehnegarTemplte;
 
 
     public AuthServiceHandler(UserRepository userRepository) {
@@ -106,18 +113,11 @@ public class AuthServiceHandler implements AuthService {
     }
 
     @Override
-    public void forgotPassword(String email) throws UserNotFoundException {
-        String code = generateAndSaveCode(email);
-
+    public void forgotPassword(String phone) throws UserNotFoundException {
+        String code = generateAndSaveCode(phone);
         try {
-            Email mail = DefaultEmail.builder()
-                    .from(new InternetAddress(sender))
-                    .to(Lists.newArrayList(new InternetAddress(email)))
-                    .subject("Gamein Password Reset")
-                    .body("کد فراموشی شما: " + code)
-                    .encoding("UTF-8").build();
-            emailService.send(mail);
-        } catch (AddressException e) {
+            RestUtil.sendSMS(kavehnegarBaseUrl,code,phone,kavehnegarTemplte);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
