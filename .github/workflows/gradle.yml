@@ -9,13 +9,15 @@ jobs:
 
   build-team-bulding:
     #needs: check-code
-    runs-on: [app]
+    runs-on: [app-3]
     steps:
       - uses: actions/checkout@master
       - run: |
+              whoami
               docker login   -u daria -p 7HlUyiSD  https://registry.dariasystem.com
               docker build -t registry.dariasystem.com/gamein/team-bulding:dev .
               docker push registry.dariasystem.com/gamein/team-bulding:dev
+ 
  
  
   deploy-team-bulding:
