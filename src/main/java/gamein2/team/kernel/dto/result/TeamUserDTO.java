@@ -8,8 +8,9 @@ import lombok.Setter;
 @Setter
 public class TeamUserDTO extends UserDTO{
     private String email;
-    public TeamUserDTO(Long id, String username, String persianName, String persianSurname, Gender gender,String email) {
-        super(id, username, persianName, persianSurname, gender);
+    public TeamUserDTO(Long id, String username, String persianName, String persianSurname, Gender gender,String email,
+                       String school,String major) {
+        super(id, username, persianName, persianSurname, gender,school,major);
         this.email = email;
     }
 }

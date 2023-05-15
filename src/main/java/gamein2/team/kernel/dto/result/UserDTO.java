@@ -13,4 +13,6 @@ public class UserDTO {
     private String persianName;
     private String persianSurname;
     private Gender gender;
+    private String school;
+    private String major;
 }

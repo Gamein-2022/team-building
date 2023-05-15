@@ -102,7 +102,7 @@ public class User {
     }
 
     public UserDTO toDTO() {
-        return new UserDTO(id, name, persianName, persianSurname, gender);
+        return new UserDTO(id, name, persianName, persianSurname, gender,school,major);
     }
 
     public ProfileInfoDTO toProfileDTO() {
@@ -112,6 +112,6 @@ public class User {
     }
 
     public TeamUserDTO userDTO(){
-        return new TeamUserDTO(id, name, persianName, persianSurname, gender,email);
+        return new TeamUserDTO(id, name, persianName, persianSurname, gender,email,school,major);
     }
 }
