@@ -18,6 +18,7 @@ jobs:
               docker push registry.dariasystem.com/gamein/team-bulding:dev
  
  
+ 
   deploy-team-bulding:
     needs: build-team-bulding
     runs-on: [app]
