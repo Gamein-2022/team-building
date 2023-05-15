@@ -9,7 +9,7 @@ jobs:
 
   build-team-bulding:
     #needs: check-code
-    runs-on: [app]
+    runs-on: [app-3]
     steps:
       - uses: actions/checkout@master
       - run: |
