@@ -33,7 +33,7 @@ public class TeamController {
     }
 
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+   /* @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResult> createTeam(@ModelAttribute("authInfo") AuthInfo authInfo,
                                                  @RequestBody TeamInfoRequestDTO request) {
@@ -45,7 +45,7 @@ public class TeamController {
             ErrorResultDTO error = new ErrorResultDTO(e.getMessage());
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResult> getTeamInfo(@ModelAttribute("authInfo") AuthInfo authInfo) {
@@ -66,7 +66,7 @@ public class TeamController {
                 HttpStatus.OK);
     }
 
-    @PutMapping(value = "profile", produces = MediaType.APPLICATION_JSON_VALUE)
+/*    @PutMapping(value = "profile", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResult> updateProfile(@ModelAttribute AuthInfo authInfo,
                                                     @RequestBody ProfileInfoRequestDTO profile) {
         try {
@@ -189,5 +189,5 @@ public class TeamController {
             logger.error(e.getMessage(), e);
             return new ResponseEntity<>(new ErrorResultDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
 }

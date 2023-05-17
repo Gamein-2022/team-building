@@ -173,7 +173,7 @@ public class TeamServiceHandler implements TeamService {
 
     @Override
     public TeamInfoResultDTO getTeamInfo(Team team, User user) throws BadRequestException {
-        checkProfileCompletion(user);
+        //checkProfileCompletion(user);
         return new TeamInfoResultDTO(
                 team == null ? null : team.getName(),
                 team == null ? null : team.getUsers().stream().map(User::userDTO).collect(Collectors.toList()),
